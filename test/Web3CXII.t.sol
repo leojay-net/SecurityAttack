@@ -25,7 +25,17 @@ contract WEB3CXIITEST is Test {
 
         assertEq(w3cxii.balanceOf(user), 0.5 ether);
         assertEq(address(w3cxii).balance, 1.5 ether);
+    }
 
+    function test_DepositRevertWithMax() public {
+        deal(address(w3cxii), 0 ether);
+        vm.startPrank(user);
+        w3cxii.deposit{value: 0.5 ether}();
+        w3cxii.deposit{value: 0.5 ether}();
+        
+        vm.expectRevert("Max deposit exceeded");
+        w3cxii.deposit{value: 0.5 ether}();
+        vm.stopPrank();
     }
 
     function test_forceEther() public {
